@@ -1,3 +1,5 @@
+![AXINITE](topaz.svg)
+
 # TOPAZ FRAMEWORK
 
 ## Custom framework composed of various PHP libs/modules
