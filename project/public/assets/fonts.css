@@ -1,0 +1,21 @@
+@import "font/styles.css"; 
+
+.xq-sans {font-family: 'xqRegular' !important}
+.xq-sans-italic {font-family: 'xqItalic' !important}
+.xq-sans-bold {font-family: 'xqBold' !important}
+.xq-sans-black {font-family: 'xqExtraBold' !important}
+.xq-sans-black-italic {font-family: 'xqExtraBoldItalic' !important}
+.xq-sans-bold-italic {font-family: 'xqBoldItalic' !important}
+.xq-sans-semi-bold {font-family: 'xqSemiBold' !important}
+.xq-sans-semi-bold-italic {font-family: 'xqSemiBoldItalic' !important}
+.xq-sans-light {font-family: 'xqLight' !important}
+.xq-sans-light-italic {font-family: 'xqLightItalic' !important}
+
+.xq-sans-condensed {font-family: 'xqCondensed' !important}
+.xq-sans-condensed-bold {font-family: 'xqCondensedBold' !important}
+.xq-sans-condensed-light {font-family: 'xqCondensedLight' !important}
+
+.xq-serif {font-family: 'xqSerif' !important}
+.xq-serif-bold {font-family: 'xqSerifBold' !important}
+.xq-serif-light {font-family: 'xqSerifLight' !important}
+.xq-serif-thin {font-family: 'xqSerifThin' !important}

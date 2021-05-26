@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html>
+<title>Topaz - Articles</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ root_path }}/assets/w3.css">
+<script type="text/javascript" src="{{ root_path }}/assets/main.js"></script> 
+
+<body class="w3-animate-top">
+	
+
+	
+{{ include('navbar.twig.html') }}
+
+
+
+<div class="w3-container">
+			
+	<h4>Articles Page</h4>
+
+	<div class="w3-button w3-right w3-border" onclick="window.location.href = '/articles/add'"> Add Article </div>	
+	<br>
+	<hr>
+	
+	<table class="w3-table w3-bordered  w3-white w3-small"><tbody>
+	 <tr>
+  <td class="w3-light-gray w3-small">ID</td>
+  <td class="w3-light-gray w3-small">Title</td>
+  <td class="w3-light-gray w3-small">Created at</td>
+  <td class="w3-light-gray w3-small">View</td>
+  <td class="w3-light-gray w3-small">Delete</td>
+ </tr>
+     
+    {% for article in article_list %}
+		 <tr id="article_{{ article.id|e }}">
+			<td>{{ article.id|e }}</td>
+			<td>{{ article.title|e }}</td>
+			<td>{{ article.created|e }}</td>
+			<td><span class="w3-tag w3-border w3-white w3-round" style="cursor:pointer" onclick="listItemAction(this)">View</span></td>
+			<td><span class="w3-tag w3-border w3-red w3-round" style="cursor:pointer" onclick="listItemAction(this)">Delete</span></td>
+        </tr>
+    {% endfor %}
+    
+    
+	</tbody></table>
+	
+	
+	
+	
+</div>
+
+
+
+
+
+  <div id="modal_container" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top">
+      <div class="w3-container">
+        <span onclick="document.getElementById('modal_container').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <h4 id="modal_container_title">Title</h4>
+        <p id="modal_container_text">Some text. Some text. Some text.</p>
+        
+        <div class="w3-button w3-deep-purple" onclick="document.getElementById('modal_container').style.display='none'"> OK </div>       
+      </div>
+       <br>
+    </div>
+  </div>
+
+
+
+</body>
+</html>
+
+
+<script>
+
+function listItemAction(that)
+{
+	if (that.innerHTML === 'View')
+	{
+		getById(that.parentNode.parentNode.id);
+	}
+	
+	else if (that.innerHTML === 'Delete')
+	{
+		deleteId(that.parentNode.parentNode.id);
+	}	
+
+}
+
+function showModal(title, message)
+{
+	document.getElementById('modal_container').style.display = 'block';
+	document.getElementById('modal_container_title').innerHTML = title;
+	document.getElementById('modal_container_text').innerHTML = message;
+}
+
+function getById(articleId)
+{
+	articleId = articleId.replace('article_', '');
+	articleId = parseInt(articleId);
+    
+	post('/articles/getId/post', {id:articleId}, function(a){		
+			
+        if (a.xhr_success.success){
+            showModal(a.xhr_success.success.title, b64Decode(a.xhr_success.success.body));
+        }
+        else
+        {
+            showModal('Article', 'Failed to read article!');    
+        }		
+	});
+}
+
+function deleteId(articleId)
+{
+	articleId = articleId.replace('article_', '');
+	articleId = parseInt(articleId);
+	post('/articles/deleteId/post', {id:articleId}, function(a){					
+            if (a.xhr_success.success){
+                showModal('Article', 'Article deleted!');                  
+                setTimeout(function () {
+                    window.location.replace("/articles");
+                }, 1000);
+            }
+            else
+            {
+                showModal('Article', 'Failed to delete article!');    
+            }		
+	});
+}
+
+
+
+
+</script>
+

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<title>Topaz - About</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ root_path }}/assets/w3.css">
+<script type="text/javascript" src="{{ root_path }}/assets/main.js"></script> 
+
+<style>
+html{
+	overflow:hidden;
+}
+.center{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
+
+<body class="w3-animate-top">
+	
+{{ include('navbar.twig.html') }}
+
+
+
+    <div class="center">
+		
+	<div class="w3-center">	        
+		<input id="login_inputEmail" maxlength="128" minlength="4" type="email" class="w3-input"  placeholder="Email" />
+		<input id="login_inputPass" maxlength="128" minlength="4" type="password" class="w3-input"  placeholder="Password" />
+		<div id="login" class="w3-button w3-round w3-deep-purple w3-block" onclick="login()"> Login </div>
+        <br>
+        <small class="w3-tag w3-round w3-gray">admin@admin.admin | 1234</small>
+    </div>
+    
+    
+    </div>
+
+
+  <div id="modal_container" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top">
+      <div class="w3-container">
+        <span onclick="document.getElementById('modal_container').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <h3 id="modal_container_title">Message</h3>
+        <p id="modal_container_text">...</p>
+        
+        <div class="w3-button w3-deep-purple" onclick="document.getElementById('modal_container').style.display='none'"> OK </div>       
+      </div>
+       <br>
+    </div>
+  </div>
+
+
+
+
+</body>
+</html>
+
+
+<script>
+
+    function validateInput(value) {
+        let allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!#$?_+-";
+
+        if (value) {
+            for (let i = 0; i < value.length; i++) {
+                if (!allowedChars.includes(value[i])) return false;
+            }
+        }
+        return true;
+    }
+
+	function validateEmail(email){
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    }
+
+    function login() {
+		disableButton(); //block multiple clicks
+	
+        let email = document.getElementById("login_inputEmail");
+        let password = document.getElementById("login_inputPass");
+
+        if (email.value === "") {
+            showModal("Email field empty!");
+            email.style.borderBottom = "red solid 0.5px";
+            return false;
+        }
+
+        if (password.value === "") {
+            showModal("Password field empty!");
+            password.style.borderBottom = "red solid 0.5px";
+            return false;
+        }
+
+        if (!validateEmail(email.value)) {
+            showModal("Bad email format!");
+            email.style.borderBottom = "red solid 0.5px";
+            return false;
+        }
+
+        if (!validateInput(password.value)) {
+            showModal("Bad password text! Must be alphanumeric with !#$?_+- symbols.");
+            password.style.borderBottom = "red solid 0.5px";
+            return false;
+        }
+
+        if (password.value.length < 4) {
+            showModal("Pasword is too short! Must be atleast 4 characters.");
+            password.style.borderBottom = "red solid 0.5px";
+            return false;
+        }
+
+
+        sendLogin(getEmailAndPass());
+        return true;
+    }
+
+	function disableButton() {
+		let login = document.getElementById("login");
+		login.style.pointerEvents = "none"; 
+		login.classList.remove("w3-deep-purple");
+		login.classList.add("w3-gray");
+		var t = null;
+		t = setInterval(function(){enableButton(t)}, 1000);
+	}
+
+    function enableButton(t){
+		let login = document.getElementById("login");
+		login.style.pointerEvents = "auto"; 
+		login.classList.remove("w3-gray");
+		login.classList.add("w3-deep-purple");
+		clearInterval(t); 
+    }    
+
+
+
+function showModal(title, message=null)
+{
+	document.getElementById('modal_container').style.display = 'block';
+	document.getElementById('modal_container_title').innerHTML = title;
+	document.getElementById('modal_container_text').innerHTML = message;
+}
+
+
+    function getEmailAndPass() {
+        return {
+			e: document.getElementById("login_inputEmail").value,
+			p: document.getElementById("login_inputPass").value,
+		}
+    }
+
+
+function sendLogin(data)
+{
+    post('/login/post', data, function(a){	
+  
+           
+        	if (a.xhr_success.success){
+                window.location.replace("/");
+            }
+            else
+            {
+                showModal('Login', 'Login failed!');    
+            }				
+                   
+							
+	});
+}
+
+</script>
+
+
+

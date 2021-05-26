@@ -1,0 +1,40 @@
+version: '2'
+volumes:
+  db:
+  phpmyadmin:
+services:
+  mariadb:
+   hostname: myhostname-db
+   image: mariadb
+   environment:
+     MYSQL_USER: topaz 
+     MYSQL_PASSWORD: topaz
+     MYSQL_DATABASE: topaz 
+     MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+   volumes:
+     - db:/var/lib/mysql
+  phpmyadmin:
+   image: phpmyadmin/phpmyadmin
+   container_name: phpmyadmin
+   links:
+    - mariadb:db
+   depends_on:
+    - mariadb
+   environment:
+    - PMA_ARBITRARY=1
+   restart: always
+   ports:
+    - 8080:80
+   volumes:
+    - phpmyadmin:/sessions
+  web:
+    hostname: myhostname-www
+    build: ./docker/
+    depends_on:
+      - mariadb
+    links:
+      - mariadb:db
+    ports:
+      - 80:80 
+    volumes:
+      - ./project:/var/www

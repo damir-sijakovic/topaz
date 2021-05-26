@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html>
+<title>Topaz - Add Article</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ root_path }}/assets/w3.css">
+<script type="text/javascript" src="{{ root_path }}/assets/main.js"></script> 
+<link rel="stylesheet" type="text/css" href="{{ root_path }}/assets/pell.min.css">
+
+
+<body class="w3-animate-top">
+	
+
+	
+{{ include('navbar.twig.html') }}
+
+
+
+
+<div class="w3-container">
+	<h1>Articles Add Page</h1>
+	
+	<div class="w3-button w3-right w3-border" onclick="window.location.href = '/articles'"> Back to Articles </div>
+		
+	<hr>
+
+
+
+      <p>Title:</p>
+      <input id="article_title" class="w3-input" />
+
+      <p>Body:</p>
+      <div id="editor" class="pell"></div>       
+      <br>
+      <div class="w3-button w3-deep-purple" onclick="submit()"> Submit </div>
+      <div class="w3-button w3-red" onclick="removeText()"> Clear </div>
+           
+	
+		
+	
+</div>
+
+
+
+
+  <div id="modal_container" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top">
+      <div class="w3-container">
+        <span onclick="document.getElementById('modal_container').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <h4 id="modal_container_title">Title</h4>
+        <p id="modal_container_text">Some text. Some text. Some text.</p>
+        
+        <div class="w3-button w3-deep-purple" onclick="document.getElementById('modal_container').style.display='none'"> OK </div>       
+      </div>
+       <br>
+    </div>
+  </div>
+
+
+
+</body>
+</html>
+
+
+
+
+<script src="{{ root_path }}/assets/pell.min.js"></script>
+    <script>
+        
+        function showModal(title, message)
+        {
+            document.getElementById('modal_container').style.display = 'block';
+            document.getElementById('modal_container_title').innerHTML = title;
+            document.getElementById('modal_container_text').innerHTML = message;
+        } 
+            
+        
+      var editor = window.pell.init({
+        element: document.getElementById('editor'),
+        defaultParagraphSeparator: 'p',
+        onChange: function (html) {},
+      })
+            
+		function submit()
+		{		  
+            
+            console.log(51251253);
+			var title = document.getElementById('article_title').value;
+			var body = editor.content.innerHTML;
+			var data = {};
+			
+			if (title.length && body.length)
+			{
+				
+				data.title = b64Encode(title.trim());
+				data.body = b64Encode(body);
+									
+				post('/articles/add/post', data, function(a){	
+       
+                    if (a.xhr_success.success){
+                        showModal('Article', 'Article added!');                  
+                        setTimeout(function () {
+                            window.location.replace("/articles");
+                        }, 1000);
+                    }
+                    else
+                    {
+                        showModal('Article', 'Failed to add article!');    
+                    }	
+                    	
+				});
+				
+			}
+            else
+            {
+                showModal('Article', 'Add text into Title and Body fields!');   
+            }	
+			
+		}
+
+		function removeText()
+		{		  			
+			editor.content.innerHTML = '';
+		}
+
+      
+      
+           
+      
+      
+      
+    </script>

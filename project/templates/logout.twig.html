@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<title>Topaz - About</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link rel="stylesheet" href="{{ root_path }}/assets/w3.css">
+<script type="text/javascript" src="{{ root_path }}/assets/main.js"></script> 
+
+<style>
+html{
+	overflow:hidden;
+}
+.center{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
+
+<body class="w3-animate-top">
+	
+{{ include('navbar.twig.html') }}
+
+
+
+    <div class="center">
+		
+	<div class="w3-center">	        
+		<div id="login" class="w3-button w3-round w3-deep-purple w3-block" onclick="sendLogout()"> Logout </div>
+    </div>
+    
+    
+    </div>
+
+
+  <div id="modal_container" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top">
+      <div class="w3-container">
+        <span onclick="document.getElementById('modal_container').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <h3 id="modal_container_title">Message</h3>
+        <p id="modal_container_text">...</p>
+        
+        <div class="w3-button w3-deep-purple" onclick="document.getElementById('modal_container').style.display='none'"> OK </div>       
+      </div>
+       <br>
+    </div>
+  </div>
+
+
+
+
+</body>
+</html>
+
+
+<script>
+    
+function showModal(title, message=null)
+{
+	document.getElementById('modal_container').style.display = 'block';
+	document.getElementById('modal_container_title').innerHTML = title;
+	document.getElementById('modal_container_text').innerHTML = message;
+}
+    
+    
+function sendLogout()
+{
+    
+    postCsrf('/logout/post', {action:'logout'}, function(a)
+    {		
+        if (a.xhr_success){
+            window.location.replace("/");
+        }
+        else
+        {
+            showModal('Logout', 'Logout failed!');    
+        }		
+	});
+    
+
+
+}
+
+</script>
+
+
+
